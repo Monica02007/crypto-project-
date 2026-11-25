@@ -1,0 +1,8 @@
+{
+  "name": "VeriURL — Hybrid Phishing Detection",
+  "description": "Hybrid phishing website detection system combining deterministic URL normalization and SHA-256 threat hash lookup with transparent classical machine learning (TF-IDF + Multinomial Naive Bayes and Logistic Regression) and explainable risk reporting.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
