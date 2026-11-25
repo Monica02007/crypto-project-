@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="/src/css/styles.css" />
+    <link rel="stylesheet" href="./src/css/styles.css" />
   </head>
   <body>
     <div class="app-shell">
@@ -30,9 +30,13 @@
             <button type="button" class="nav-link" data-tab="threats">Threat Ledger</button>
             <button type="button" class="nav-link" data-tab="models">ML Evaluation</button>
             <button type="button" class="nav-link" data-tab="history">Scan History</button>
+            <button type="button" class="nav-link" data-tab="files">Source Files</button>
           </nav>
 
           <div class="topbar-actions">
+            <button type="button" id="download-zip-btn" class="btn btn-secondary btn-sm">
+              Download ZIP
+            </button>
             <button type="button" id="primary-header-action" class="btn btn-primary btn-sm">
               Run Sample
             </button>
@@ -51,12 +55,13 @@
           <button type="button" class="mobile-nav-link" data-tab="threats">Threat Ledger</button>
           <button type="button" class="mobile-nav-link" data-tab="models">ML Evaluation</button>
           <button type="button" class="mobile-nav-link" data-tab="history">Scan History</button>
+          <button type="button" class="mobile-nav-link" data-tab="files">Source Files</button>
         </nav>
       </header>
 
       <main id="main-content" class="main-container"></main>
     </div>
 
-    <script type="module" src="/src/js/app.js"></script>
+    <script type="module" src="./src/js/app.js"></script>
   </body>
 </html>

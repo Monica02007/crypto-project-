@@ -3,14 +3,12 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { HybridMLEngine } from '../core/mlEngine.js';
 import { normalizeUrl } from '../core/normalizer.js';
+import { DISCLAIMER_TEXT } from '../core/threatSeeds.js';
 import { loadLocalDatasetIfExists, parseUrlDatasetCsv } from './dataset.js';
 import { ThreatHashStore, computeSha256Hex } from './threatStore.js';
 
 const DATA_DIR = path.resolve(process.cwd(), 'data');
 const HISTORY_PATH = path.join(DATA_DIR, 'scan-history.json');
-
-const DISCLAIMER_TEXT =
-  'Probabilistic Assessment Disclaimer: Cryptographic hash matching only detects exact known normalized URLs, and classical ML predictions are statistical estimates rather than absolute guarantees. Novel zero-day phishing URLs can evade both checks, while complex legitimate URLs (e.g., long OAuth or tracking links) can occasionally trigger false positives.';
 
 export class PhishingDetectionService {
   constructor() {

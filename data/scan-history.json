@@ -1,5 +1,891 @@
 [
   {
+    "id": "a3ffc00f-817e-4f6a-8a3b-bc9fdf26f3a7",
+    "analyzedAt": "2026-11-25T04:15:39.706Z",
+    "rawUrl": "http://login-secure-bank.xyz/update",
+    "normalizedUrl": "http://login-secure-bank.xyz/update",
+    "sha256": "ddd3b4c7e93f22ac281a41a729c0057fcce6bc30e8a102a94fa423fd60fa2223",
+    "hashStatus": "MATCH",
+    "verdict": "HIGH_RISK_KNOWN_THREAT",
+    "verdictLabel": "High Risk Phishing Site",
+    "riskScore": 1,
+    "mnbProbability": 0.9504,
+    "logregProbability": 0.6255,
+    "result": {
+      "id": "a3ffc00f-817e-4f6a-8a3b-bc9fdf26f3a7",
+      "analyzedAt": "2026-11-25T04:15:39.706Z",
+      "module1": {
+        "normalization": {
+          "rawUrl": "http://login-secure-bank.xyz/update",
+          "normalizedUrl": "http://login-secure-bank.xyz/update",
+          "scheme": "http",
+          "hostname": "login-secure-bank.xyz",
+          "port": "",
+          "pathname": "/update",
+          "search": "",
+          "steps": [
+            {
+              "rule": "Trim Surrounding Whitespace",
+              "applied": false,
+              "detail": "No leading or trailing whitespace present."
+            },
+            {
+              "rule": "Strip Control & Zero-Width Characters",
+              "applied": false,
+              "detail": "No hidden control characters detected."
+            },
+            {
+              "rule": "Ensure Explicit URL Scheme",
+              "applied": false,
+              "detail": "Explicit scheme already present."
+            },
+            {
+              "rule": "Lowercase Scheme & Canonicalize Hostname (IDNA/Punycode)",
+              "applied": false,
+              "detail": "Canonical host resolved to \"login-secure-bank.xyz\" under \"http\"."
+            },
+            {
+              "rule": "Remove Default Ports (:80 / :443)",
+              "applied": false,
+              "detail": "No default port present."
+            },
+            {
+              "rule": "Normalize Path Formatting",
+              "applied": false,
+              "detail": "Path \"/update\" already canonical."
+            },
+            {
+              "rule": "Strip Client-Side Fragment (#)",
+              "applied": false,
+              "detail": "No URL fragment present."
+            },
+            {
+              "rule": "Canonicalize Query Parameter Ordering",
+              "applied": false,
+              "detail": "No query parameters present."
+            }
+          ],
+          "valid": true
+        },
+        "sha256": "ddd3b4c7e93f22ac281a41a729c0057fcce6bc30e8a102a94fa423fd60fa2223",
+        "hashLookupStatus": "MATCH",
+        "matchedThreat": {
+          "sha256": "ddd3b4c7e93f22ac281a41a729c0057fcce6bc30e8a102a94fa423fd60fa2223",
+          "normalizedUrl": "http://login-secure-bank.xyz/update",
+          "source": "PhishTank Seed",
+          "category": "Banking Credential Phishing",
+          "targetBrand": "Generic Banking",
+          "addedAt": "2026-11-15T10:00:00.000Z",
+          "isSeeded": true
+        },
+        "safetyNote": "Exact SHA-256 digest match found in Known-Threat Database (PhishTank Seed). Flagged immediately without relying on probabilistic ML."
+      },
+      "module2": {
+        "executed": true,
+        "skippedReason": "Module 1 matched an exact known-threat SHA-256 hash; Module 2 diagnostic ML analysis is shown alongside for verification.",
+        "ensembleProbability": 0.7718,
+        "mnbProbability": 0.9504,
+        "logregProbability": 0.6255,
+        "ensembleWeights": {
+          "mnb": 0.45,
+          "logreg": 0.55
+        },
+        "lexicalFeatures": {
+          "urlLength": 35,
+          "hostnameLength": 21,
+          "pathLength": 7,
+          "dotCount": 1,
+          "hyphenCount": 2,
+          "underscoreCount": 0,
+          "slashCount": 3,
+          "questionCount": 0,
+          "equalCount": 0,
+          "atSymbolPresent": 0,
+          "doubleSlashRedirect": 0,
+          "isHttps": 0,
+          "hasIpAddress": 0,
+          "digitRatio": 0,
+          "specialCharCount": 0,
+          "subdomainDepth": 0,
+          "suspiciousKeywordCount": 3,
+          "shannonEntropy": 4.3518
+        },
+        "featureContributions": [
+          {
+            "key": "isHttps",
+            "label": "HTTPS Scheme Used",
+            "rawValue": 0,
+            "formattedValue": "No (0)",
+            "standardizedValue": -1.114,
+            "weight": -0.8985,
+            "contribution": 1.0007,
+            "direction": "phishing",
+            "triggerReason": "Served over unencrypted HTTP"
+          },
+          {
+            "key": "urlLength",
+            "label": "Total URL Length",
+            "rawValue": 35,
+            "formattedValue": "35",
+            "standardizedValue": -1.206,
+            "weight": 0.804,
+            "contribution": -0.9694,
+            "direction": "legitimate"
+          },
+          {
+            "key": "suspiciousKeywordCount",
+            "label": "Suspicious Keyword Hits",
+            "rawValue": 3,
+            "formattedValue": "3",
+            "standardizedValue": 0.763,
+            "weight": 0.8243,
+            "contribution": 0.6288,
+            "direction": "phishing",
+            "triggerReason": "Contains 3 credential/urgency/brand keywords"
+          },
+          {
+            "key": "hostnameLength",
+            "label": "Hostname Length",
+            "rawValue": 21,
+            "formattedValue": "21",
+            "standardizedValue": -0.538,
+            "weight": 0.9265,
+            "contribution": -0.4989,
+            "direction": "legitimate"
+          },
+          {
+            "key": "dotCount",
+            "label": "Dot (.) Count",
+            "rawValue": 1,
+            "formattedValue": "1",
+            "standardizedValue": -1.393,
+            "weight": 0.2841,
+            "contribution": -0.3956,
+            "direction": "legitimate"
+          },
+          {
+            "key": "shannonEntropy",
+            "label": "URL Shannon Entropy",
+            "rawValue": 4.3518,
+            "formattedValue": "4.35",
+            "standardizedValue": 0.975,
+            "weight": 0.3852,
+            "contribution": 0.3755,
+            "direction": "phishing",
+            "triggerReason": "Elevated string entropy (4.35 bits/char)"
+          },
+          {
+            "key": "pathLength",
+            "label": "Path & Query Length",
+            "rawValue": 7,
+            "formattedValue": "7",
+            "standardizedValue": -0.732,
+            "weight": -0.4113,
+            "contribution": 0.3009,
+            "direction": "phishing"
+          },
+          {
+            "key": "slashCount",
+            "label": "Slash (/) Count",
+            "rawValue": 3,
+            "formattedValue": "3",
+            "standardizedValue": -0.815,
+            "weight": -0.2447,
+            "contribution": 0.1994,
+            "direction": "phishing"
+          },
+          {
+            "key": "hyphenCount",
+            "label": "Hyphen (-) Count",
+            "rawValue": 2,
+            "formattedValue": "2",
+            "standardizedValue": -0.173,
+            "weight": 0.8812,
+            "contribution": -0.1524,
+            "direction": "legitimate",
+            "triggerReason": "High hyphen count (2) typical of lookalike domains"
+          },
+          {
+            "key": "hasIpAddress",
+            "label": "IP-Address Host",
+            "rawValue": 0,
+            "formattedValue": "No (0)",
+            "standardizedValue": -0.218,
+            "weight": 0.5146,
+            "contribution": -0.112,
+            "direction": "legitimate"
+          },
+          {
+            "key": "digitRatio",
+            "label": "Digit Character Ratio",
+            "rawValue": 0,
+            "formattedValue": "0.0%",
+            "standardizedValue": -0.408,
+            "weight": 0.0881,
+            "contribution": -0.036,
+            "direction": "neutral"
+          },
+          {
+            "key": "underscoreCount",
+            "label": "Underscore (_) Count",
+            "rawValue": 0,
+            "formattedValue": "0",
+            "standardizedValue": -0.17,
+            "weight": -0.1521,
+            "contribution": 0.0259,
+            "direction": "neutral"
+          },
+          {
+            "key": "equalCount",
+            "label": "Equals (=) Count",
+            "rawValue": 0,
+            "formattedValue": "0",
+            "standardizedValue": -0.298,
+            "weight": -0.0603,
+            "contribution": 0.018,
+            "direction": "neutral"
+          },
+          {
+            "key": "questionCount",
+            "label": "Question Mark (?) Count",
+            "rawValue": 0,
+            "formattedValue": "0",
+            "standardizedValue": -0.315,
+            "weight": -0.053,
+            "contribution": 0.0167,
+            "direction": "neutral"
+          },
+          {
+            "key": "subdomainDepth",
+            "label": "Subdomain Depth",
+            "rawValue": 0,
+            "formattedValue": "0",
+            "standardizedValue": -1.307,
+            "weight": -0.0116,
+            "contribution": 0.0151,
+            "direction": "neutral"
+          },
+          {
+            "key": "atSymbolPresent",
+            "label": "@ Symbol Present",
+            "rawValue": 0,
+            "formattedValue": "No (0)",
+            "standardizedValue": -0.131,
+            "weight": 0.0944,
+            "contribution": -0.0124,
+            "direction": "neutral"
+          },
+          {
+            "key": "specialCharCount",
+            "label": "Special Character Count",
+            "rawValue": 0,
+            "formattedValue": "0",
+            "standardizedValue": -0.288,
+            "weight": -0.0276,
+            "contribution": 0.008,
+            "direction": "neutral"
+          },
+          {
+            "key": "doubleSlashRedirect",
+            "label": "Embedded // Redirect",
+            "rawValue": 0,
+            "formattedValue": "No (0)",
+            "standardizedValue": -0.075,
+            "weight": 0.0293,
+            "contribution": -0.0022,
+            "direction": "neutral"
+          }
+        ],
+        "topTriggers": [
+          {
+            "key": "isHttps",
+            "label": "HTTPS Scheme Used",
+            "rawValue": 0,
+            "formattedValue": "No (0)",
+            "standardizedValue": -1.114,
+            "weight": -0.8985,
+            "contribution": 1.0007,
+            "direction": "phishing",
+            "triggerReason": "Served over unencrypted HTTP"
+          },
+          {
+            "key": "urlLength",
+            "label": "Total URL Length",
+            "rawValue": 35,
+            "formattedValue": "35",
+            "standardizedValue": -1.206,
+            "weight": 0.804,
+            "contribution": -0.9694,
+            "direction": "legitimate"
+          },
+          {
+            "key": "suspiciousKeywordCount",
+            "label": "Suspicious Keyword Hits",
+            "rawValue": 3,
+            "formattedValue": "3",
+            "standardizedValue": 0.763,
+            "weight": 0.8243,
+            "contribution": 0.6288,
+            "direction": "phishing",
+            "triggerReason": "Contains 3 credential/urgency/brand keywords"
+          },
+          {
+            "key": "hostnameLength",
+            "label": "Hostname Length",
+            "rawValue": 21,
+            "formattedValue": "21",
+            "standardizedValue": -0.538,
+            "weight": 0.9265,
+            "contribution": -0.4989,
+            "direction": "legitimate"
+          },
+          {
+            "key": "dotCount",
+            "label": "Dot (.) Count",
+            "rawValue": 1,
+            "formattedValue": "1",
+            "standardizedValue": -1.393,
+            "weight": 0.2841,
+            "contribution": -0.3956,
+            "direction": "legitimate"
+          },
+          {
+            "key": "shannonEntropy",
+            "label": "URL Shannon Entropy",
+            "rawValue": 4.3518,
+            "formattedValue": "4.35",
+            "standardizedValue": 0.975,
+            "weight": 0.3852,
+            "contribution": 0.3755,
+            "direction": "phishing",
+            "triggerReason": "Elevated string entropy (4.35 bits/char)"
+          }
+        ],
+        "topNGrams": [
+          {
+            "token": "tok:login",
+            "tfidfWeight": 0.0845,
+            "logOdds": 1.0026,
+            "impact": 0.0847,
+            "direction": "phishing"
+          },
+          {
+            "token": "c3:ogi",
+            "tfidfWeight": 0.0845,
+            "logOdds": 1.0026,
+            "impact": 0.0847,
+            "direction": "phishing"
+          },
+          {
+            "token": "c3:gin",
+            "tfidfWeight": 0.0845,
+            "logOdds": 1.0026,
+            "impact": 0.0847,
+            "direction": "phishing"
+          },
+          {
+            "token": "c4:logi",
+            "tfidfWeight": 0.0845,
+            "logOdds": 1.0026,
+            "impact": 0.0847,
+            "direction": "phishing"
+          },
+          {
+            "token": "c4:ogin",
+            "tfidfWeight": 0.0845,
+            "logOdds": 1.0026,
+            "impact": 0.0847,
+            "direction": "phishing"
+          },
+          {
+            "token": "c5:login",
+            "tfidfWeight": 0.0845,
+            "logOdds": 1.0026,
+            "impact": 0.0847,
+            "direction": "phishing"
+          },
+          {
+            "token": "c3:-se",
+            "tfidfWeight": 0.1144,
+            "logOdds": 0.7055,
+            "impact": 0.0807,
+            "direction": "phishing"
+          },
+          {
+            "token": "c3:dat",
+            "tfidfWeight": 0.1166,
+            "logOdds": 0.6739,
+            "impact": 0.0786,
+            "direction": "phishing"
+          }
+        ],
+        "matchedKeywords": [
+          "login",
+          "update",
+          "secure"
+        ]
+      },
+      "module3": {
+        "verdict": "HIGH_RISK_KNOWN_THREAT",
+        "verdictLabel": "High Risk Phishing Site",
+        "riskScore": 1,
+        "confidenceLabel": "Deterministic Cryptographic Match (100%)",
+        "decisionBasis": "DETERMINISTIC_HASH",
+        "summary": "Found an exact SHA-256 match in the known-threat database (PhishTank Seed). Machine learning models independently scored 77% phishing probability.",
+        "decisionSteps": [
+          "Module 1 normalized input to \"http://login-secure-bank.xyz/update\".",
+          "Computed SHA-256 digest: ddd3b4c7e93f22ac281a41a729c0057fcce6bc30e8a102a94fa423fd60fa2223.",
+          "Exact match confirmed in Known-Threat Hash Database (Banking Credential Phishing).",
+          "Diagnostic ML ensemble (TF-IDF MNB 95.0% + LogReg 62.5%) scored 77.2%."
+        ],
+        "disclaimer": "Probabilistic Assessment Disclaimer: Cryptographic hash matching only detects exact known normalized URLs, and classical ML predictions are statistical estimates rather than absolute guarantees. Novel zero-day phishing URLs can evade both checks, while complex legitimate URLs (e.g., long OAuth or tracking links) can occasionally trigger false positives."
+      }
+    }
+  },
+  {
+    "id": "e1960ac6-1081-434d-adac-0e73384ab92f",
+    "analyzedAt": "2026-11-25T03:32:24.378Z",
+    "rawUrl": "http://login-secure-bank.xyz/update",
+    "normalizedUrl": "http://login-secure-bank.xyz/update",
+    "sha256": "ddd3b4c7e93f22ac281a41a729c0057fcce6bc30e8a102a94fa423fd60fa2223",
+    "hashStatus": "MATCH",
+    "verdict": "HIGH_RISK_KNOWN_THREAT",
+    "verdictLabel": "High Risk Phishing Site",
+    "riskScore": 1,
+    "mnbProbability": 0.9504,
+    "logregProbability": 0.6255,
+    "result": {
+      "id": "e1960ac6-1081-434d-adac-0e73384ab92f",
+      "analyzedAt": "2026-11-25T03:32:24.378Z",
+      "module1": {
+        "normalization": {
+          "rawUrl": "http://login-secure-bank.xyz/update",
+          "normalizedUrl": "http://login-secure-bank.xyz/update",
+          "scheme": "http",
+          "hostname": "login-secure-bank.xyz",
+          "port": "",
+          "pathname": "/update",
+          "search": "",
+          "steps": [
+            {
+              "rule": "Trim Surrounding Whitespace",
+              "applied": false,
+              "detail": "No leading or trailing whitespace present."
+            },
+            {
+              "rule": "Strip Control & Zero-Width Characters",
+              "applied": false,
+              "detail": "No hidden control characters detected."
+            },
+            {
+              "rule": "Ensure Explicit URL Scheme",
+              "applied": false,
+              "detail": "Explicit scheme already present."
+            },
+            {
+              "rule": "Lowercase Scheme & Canonicalize Hostname (IDNA/Punycode)",
+              "applied": false,
+              "detail": "Canonical host resolved to \"login-secure-bank.xyz\" under \"http\"."
+            },
+            {
+              "rule": "Remove Default Ports (:80 / :443)",
+              "applied": false,
+              "detail": "No default port present."
+            },
+            {
+              "rule": "Normalize Path Formatting",
+              "applied": false,
+              "detail": "Path \"/update\" already canonical."
+            },
+            {
+              "rule": "Strip Client-Side Fragment (#)",
+              "applied": false,
+              "detail": "No URL fragment present."
+            },
+            {
+              "rule": "Canonicalize Query Parameter Ordering",
+              "applied": false,
+              "detail": "No query parameters present."
+            }
+          ],
+          "valid": true
+        },
+        "sha256": "ddd3b4c7e93f22ac281a41a729c0057fcce6bc30e8a102a94fa423fd60fa2223",
+        "hashLookupStatus": "MATCH",
+        "matchedThreat": {
+          "sha256": "ddd3b4c7e93f22ac281a41a729c0057fcce6bc30e8a102a94fa423fd60fa2223",
+          "normalizedUrl": "http://login-secure-bank.xyz/update",
+          "source": "PhishTank Seed",
+          "category": "Banking Credential Phishing",
+          "targetBrand": "Generic Banking",
+          "addedAt": "2026-11-15T10:00:00.000Z",
+          "isSeeded": true
+        },
+        "safetyNote": "Exact SHA-256 digest match found in Known-Threat Database (PhishTank Seed). Flagged immediately without relying on probabilistic ML."
+      },
+      "module2": {
+        "executed": true,
+        "skippedReason": "Module 1 matched an exact known-threat SHA-256 hash; Module 2 diagnostic ML analysis is shown alongside for verification.",
+        "ensembleProbability": 0.7718,
+        "mnbProbability": 0.9504,
+        "logregProbability": 0.6255,
+        "ensembleWeights": {
+          "mnb": 0.45,
+          "logreg": 0.55
+        },
+        "lexicalFeatures": {
+          "urlLength": 35,
+          "hostnameLength": 21,
+          "pathLength": 7,
+          "dotCount": 1,
+          "hyphenCount": 2,
+          "underscoreCount": 0,
+          "slashCount": 3,
+          "questionCount": 0,
+          "equalCount": 0,
+          "atSymbolPresent": 0,
+          "doubleSlashRedirect": 0,
+          "isHttps": 0,
+          "hasIpAddress": 0,
+          "digitRatio": 0,
+          "specialCharCount": 0,
+          "subdomainDepth": 0,
+          "suspiciousKeywordCount": 3,
+          "shannonEntropy": 4.3518
+        },
+        "featureContributions": [
+          {
+            "key": "isHttps",
+            "label": "HTTPS Scheme Used",
+            "rawValue": 0,
+            "formattedValue": "No (0)",
+            "standardizedValue": -1.114,
+            "weight": -0.8985,
+            "contribution": 1.0007,
+            "direction": "phishing",
+            "triggerReason": "Served over unencrypted HTTP"
+          },
+          {
+            "key": "urlLength",
+            "label": "Total URL Length",
+            "rawValue": 35,
+            "formattedValue": "35",
+            "standardizedValue": -1.206,
+            "weight": 0.804,
+            "contribution": -0.9694,
+            "direction": "legitimate"
+          },
+          {
+            "key": "suspiciousKeywordCount",
+            "label": "Suspicious Keyword Hits",
+            "rawValue": 3,
+            "formattedValue": "3",
+            "standardizedValue": 0.763,
+            "weight": 0.8243,
+            "contribution": 0.6288,
+            "direction": "phishing",
+            "triggerReason": "Contains 3 credential/urgency/brand keywords"
+          },
+          {
+            "key": "hostnameLength",
+            "label": "Hostname Length",
+            "rawValue": 21,
+            "formattedValue": "21",
+            "standardizedValue": -0.538,
+            "weight": 0.9265,
+            "contribution": -0.4989,
+            "direction": "legitimate"
+          },
+          {
+            "key": "dotCount",
+            "label": "Dot (.) Count",
+            "rawValue": 1,
+            "formattedValue": "1",
+            "standardizedValue": -1.393,
+            "weight": 0.2841,
+            "contribution": -0.3956,
+            "direction": "legitimate"
+          },
+          {
+            "key": "shannonEntropy",
+            "label": "URL Shannon Entropy",
+            "rawValue": 4.3518,
+            "formattedValue": "4.35",
+            "standardizedValue": 0.975,
+            "weight": 0.3852,
+            "contribution": 0.3755,
+            "direction": "phishing",
+            "triggerReason": "Elevated string entropy (4.35 bits/char)"
+          },
+          {
+            "key": "pathLength",
+            "label": "Path & Query Length",
+            "rawValue": 7,
+            "formattedValue": "7",
+            "standardizedValue": -0.732,
+            "weight": -0.4113,
+            "contribution": 0.3009,
+            "direction": "phishing"
+          },
+          {
+            "key": "slashCount",
+            "label": "Slash (/) Count",
+            "rawValue": 3,
+            "formattedValue": "3",
+            "standardizedValue": -0.815,
+            "weight": -0.2447,
+            "contribution": 0.1994,
+            "direction": "phishing"
+          },
+          {
+            "key": "hyphenCount",
+            "label": "Hyphen (-) Count",
+            "rawValue": 2,
+            "formattedValue": "2",
+            "standardizedValue": -0.173,
+            "weight": 0.8812,
+            "contribution": -0.1524,
+            "direction": "legitimate",
+            "triggerReason": "High hyphen count (2) typical of lookalike domains"
+          },
+          {
+            "key": "hasIpAddress",
+            "label": "IP-Address Host",
+            "rawValue": 0,
+            "formattedValue": "No (0)",
+            "standardizedValue": -0.218,
+            "weight": 0.5146,
+            "contribution": -0.112,
+            "direction": "legitimate"
+          },
+          {
+            "key": "digitRatio",
+            "label": "Digit Character Ratio",
+            "rawValue": 0,
+            "formattedValue": "0.0%",
+            "standardizedValue": -0.408,
+            "weight": 0.0881,
+            "contribution": -0.036,
+            "direction": "neutral"
+          },
+          {
+            "key": "underscoreCount",
+            "label": "Underscore (_) Count",
+            "rawValue": 0,
+            "formattedValue": "0",
+            "standardizedValue": -0.17,
+            "weight": -0.1521,
+            "contribution": 0.0259,
+            "direction": "neutral"
+          },
+          {
+            "key": "equalCount",
+            "label": "Equals (=) Count",
+            "rawValue": 0,
+            "formattedValue": "0",
+            "standardizedValue": -0.298,
+            "weight": -0.0603,
+            "contribution": 0.018,
+            "direction": "neutral"
+          },
+          {
+            "key": "questionCount",
+            "label": "Question Mark (?) Count",
+            "rawValue": 0,
+            "formattedValue": "0",
+            "standardizedValue": -0.315,
+            "weight": -0.053,
+            "contribution": 0.0167,
+            "direction": "neutral"
+          },
+          {
+            "key": "subdomainDepth",
+            "label": "Subdomain Depth",
+            "rawValue": 0,
+            "formattedValue": "0",
+            "standardizedValue": -1.307,
+            "weight": -0.0116,
+            "contribution": 0.0151,
+            "direction": "neutral"
+          },
+          {
+            "key": "atSymbolPresent",
+            "label": "@ Symbol Present",
+            "rawValue": 0,
+            "formattedValue": "No (0)",
+            "standardizedValue": -0.131,
+            "weight": 0.0944,
+            "contribution": -0.0124,
+            "direction": "neutral"
+          },
+          {
+            "key": "specialCharCount",
+            "label": "Special Character Count",
+            "rawValue": 0,
+            "formattedValue": "0",
+            "standardizedValue": -0.288,
+            "weight": -0.0276,
+            "contribution": 0.008,
+            "direction": "neutral"
+          },
+          {
+            "key": "doubleSlashRedirect",
+            "label": "Embedded // Redirect",
+            "rawValue": 0,
+            "formattedValue": "No (0)",
+            "standardizedValue": -0.075,
+            "weight": 0.0293,
+            "contribution": -0.0022,
+            "direction": "neutral"
+          }
+        ],
+        "topTriggers": [
+          {
+            "key": "isHttps",
+            "label": "HTTPS Scheme Used",
+            "rawValue": 0,
+            "formattedValue": "No (0)",
+            "standardizedValue": -1.114,
+            "weight": -0.8985,
+            "contribution": 1.0007,
+            "direction": "phishing",
+            "triggerReason": "Served over unencrypted HTTP"
+          },
+          {
+            "key": "urlLength",
+            "label": "Total URL Length",
+            "rawValue": 35,
+            "formattedValue": "35",
+            "standardizedValue": -1.206,
+            "weight": 0.804,
+            "contribution": -0.9694,
+            "direction": "legitimate"
+          },
+          {
+            "key": "suspiciousKeywordCount",
+            "label": "Suspicious Keyword Hits",
+            "rawValue": 3,
+            "formattedValue": "3",
+            "standardizedValue": 0.763,
+            "weight": 0.8243,
+            "contribution": 0.6288,
+            "direction": "phishing",
+            "triggerReason": "Contains 3 credential/urgency/brand keywords"
+          },
+          {
+            "key": "hostnameLength",
+            "label": "Hostname Length",
+            "rawValue": 21,
+            "formattedValue": "21",
+            "standardizedValue": -0.538,
+            "weight": 0.9265,
+            "contribution": -0.4989,
+            "direction": "legitimate"
+          },
+          {
+            "key": "dotCount",
+            "label": "Dot (.) Count",
+            "rawValue": 1,
+            "formattedValue": "1",
+            "standardizedValue": -1.393,
+            "weight": 0.2841,
+            "contribution": -0.3956,
+            "direction": "legitimate"
+          },
+          {
+            "key": "shannonEntropy",
+            "label": "URL Shannon Entropy",
+            "rawValue": 4.3518,
+            "formattedValue": "4.35",
+            "standardizedValue": 0.975,
+            "weight": 0.3852,
+            "contribution": 0.3755,
+            "direction": "phishing",
+            "triggerReason": "Elevated string entropy (4.35 bits/char)"
+          }
+        ],
+        "topNGrams": [
+          {
+            "token": "tok:login",
+            "tfidfWeight": 0.0845,
+            "logOdds": 1.0026,
+            "impact": 0.0847,
+            "direction": "phishing"
+          },
+          {
+            "token": "c3:ogi",
+            "tfidfWeight": 0.0845,
+            "logOdds": 1.0026,
+            "impact": 0.0847,
+            "direction": "phishing"
+          },
+          {
+            "token": "c3:gin",
+            "tfidfWeight": 0.0845,
+            "logOdds": 1.0026,
+            "impact": 0.0847,
+            "direction": "phishing"
+          },
+          {
+            "token": "c4:logi",
+            "tfidfWeight": 0.0845,
+            "logOdds": 1.0026,
+            "impact": 0.0847,
+            "direction": "phishing"
+          },
+          {
+            "token": "c4:ogin",
+            "tfidfWeight": 0.0845,
+            "logOdds": 1.0026,
+            "impact": 0.0847,
+            "direction": "phishing"
+          },
+          {
+            "token": "c5:login",
+            "tfidfWeight": 0.0845,
+            "logOdds": 1.0026,
+            "impact": 0.0847,
+            "direction": "phishing"
+          },
+          {
+            "token": "c3:-se",
+            "tfidfWeight": 0.1144,
+            "logOdds": 0.7055,
+            "impact": 0.0807,
+            "direction": "phishing"
+          },
+          {
+            "token": "c3:dat",
+            "tfidfWeight": 0.1166,
+            "logOdds": 0.6739,
+            "impact": 0.0786,
+            "direction": "phishing"
+          }
+        ],
+        "matchedKeywords": [
+          "login",
+          "update",
+          "secure"
+        ]
+      },
+      "module3": {
+        "verdict": "HIGH_RISK_KNOWN_THREAT",
+        "verdictLabel": "High Risk Phishing Site",
+        "riskScore": 1,
+        "confidenceLabel": "Deterministic Cryptographic Match (100%)",
+        "decisionBasis": "DETERMINISTIC_HASH",
+        "summary": "Found an exact SHA-256 match in the known-threat database (PhishTank Seed). Machine learning models independently scored 77% phishing probability.",
+        "decisionSteps": [
+          "Module 1 normalized input to \"http://login-secure-bank.xyz/update\".",
+          "Computed SHA-256 digest: ddd3b4c7e93f22ac281a41a729c0057fcce6bc30e8a102a94fa423fd60fa2223.",
+          "Exact match confirmed in Known-Threat Hash Database (Banking Credential Phishing).",
+          "Diagnostic ML ensemble (TF-IDF MNB 95.0% + LogReg 62.5%) scored 77.2%."
+        ],
+        "disclaimer": "Probabilistic Assessment Disclaimer: Cryptographic hash matching only detects exact known normalized URLs, and classical ML predictions are statistical estimates rather than absolute guarantees. Novel zero-day phishing URLs can evade both checks, while complex legitimate URLs (e.g., long OAuth or tracking links) can occasionally trigger false positives."
+      }
+    }
+  },
+  {
     "id": "d4841854-1e1f-42d6-b903-75cbc36a3c02",
     "analyzedAt": "2026-11-25T02:50:34.930Z",
     "rawUrl": "http://198.51.100.42/auth//microsoft-office365-secure-login/verify?session=94820194&redirect=http://evil.example",

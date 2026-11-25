@@ -7,6 +7,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig(() => {
   return {
+    base: './',
     plugins: [
       {
         name: 'copy-unbundled-src-assets',
@@ -18,6 +19,10 @@ export default defineConfig(() => {
           const distAssets = path.resolve(distDir, 'src/assets');
           if (fs.existsSync(distDir) && fs.existsSync(srcAssets)) {
             fs.cpSync(srcAssets, distAssets, { recursive: true, force: true });
+          }
+          const noJekyll = path.resolve(__dirname, '.nojekyll');
+          if (fs.existsSync(distDir) && fs.existsSync(noJekyll)) {
+            fs.copyFileSync(noJekyll, path.join(distDir, '.nojekyll'));
           }
         },
       },

@@ -2,6 +2,10 @@ import express from 'express';
 import path from 'node:path';
 import { createServer as createViteServer } from 'vite';
 import { PhishingDetectionService } from './src/server/analyzer.js';
+import {
+  collectProjectFilesForZip,
+  createZipBuffer,
+} from './src/server/zipBuilder.js';
 
 async function startServer() {
   const app = express();
@@ -109,6 +113,42 @@ async function startServer() {
   app.delete('/api/history', (_req, res) => {
     service.clearHistory();
     res.json({ cleared: true });
+  });
+
+  app.get('/api/download-zip', (_req, res) => {
+    try {
+      const entries = collectProjectFilesForZip(process.cwd());
+      const zipBuffer = createZipBuffer(entries);
+      res.setHeader('Content-Type', 'application/zip');
+      res.setHeader(
+        'Content-Disposition',
+        'attachment; filename="veriurl-phishing-detector.zip"'
+      );
+      res.setHeader('Content-Length', String(zipBuffer.length));
+      res.send(zipBuffer);
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : 'Failed to build ZIP archive.';
+      res.status(500).json({ error: message });
+    }
+  });
+
+  app.get('/api/files', (_req, res) => {
+    try {
+      const entries = collectProjectFilesForZip(process.cwd(), '');
+      const files = entries
+        .map((entry) => ({
+          path: entry.name.replace(/\\/g, '/').replace(/^\/+/, ''),
+          size: entry.data.length,
+          content: entry.data.toString('utf8'),
+        }))
+        .sort((a, b) => a.path.localeCompare(b.path));
+      res.json({ files });
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : 'Failed to list project files.';
+      res.status(500).json({ error: message });
+    }
   });
 
   if (process.env.NODE_ENV === 'production') {
