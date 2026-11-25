@@ -1,5 +1,3 @@
-import type { FeatureMetadata, LexicalFeatures } from './types.ts';
-
 export const SUSPICIOUS_KEYWORDS = [
   'login',
   'signin',
@@ -37,9 +35,9 @@ export const SUSPICIOUS_KEYWORDS = [
   'cmd',
   'token',
   'auth',
-] as const;
+];
 
-export const FEATURE_METADATA: FeatureMetadata[] = [
+export const FEATURE_METADATA = [
   {
     key: 'urlLength',
     label: 'Total URL Length',
@@ -154,9 +152,9 @@ const IPV4_REGEX = /^(?:\d{1,3}\.){3}\d{1,3}$/;
 const HEX_IP_REGEX = /^0x[0-9a-f]+$/i;
 const SPECIAL_CHARS_RE = /[@?=&%$!*,;]/g;
 
-export function computeShannonEntropy(input: string): number {
+export function computeShannonEntropy(input) {
   if (!input.length) return 0;
-  const counts = new Map<string, number>();
+  const counts = new Map();
   for (const ch of input) {
     counts.set(ch, (counts.get(ch) ?? 0) + 1);
   }
@@ -169,9 +167,9 @@ export function computeShannonEntropy(input: string): number {
   return Number(entropy.toFixed(4));
 }
 
-export function extractMatchedKeywords(url: string): string[] {
+export function extractMatchedKeywords(url) {
   const lower = url.toLowerCase();
-  const matched: string[] = [];
+  const matched = [];
   for (const kw of SUSPICIOUS_KEYWORDS) {
     if (lower.includes(kw)) {
       matched.push(kw);
@@ -180,9 +178,7 @@ export function extractMatchedKeywords(url: string): string[] {
   return matched;
 }
 
-export function extractLexicalFeatures(
-  targetUrl: string
-): { features: LexicalFeatures; matchedKeywords: string[] } {
+export function extractLexicalFeatures(targetUrl) {
   let scheme = 'http';
   let hostname = '';
   let pathname = '';
@@ -236,7 +232,7 @@ export function extractLexicalFeatures(
 
   const matchedKeywords = extractMatchedKeywords(targetUrl);
 
-  const features: LexicalFeatures = {
+  const features = {
     urlLength: targetUrl.length,
     hostnameLength: hostname.length,
     pathLength: pathname.length + search.length,
@@ -260,14 +256,11 @@ export function extractLexicalFeatures(
   return { features, matchedKeywords };
 }
 
-export function featureVectorFromStruct(f: LexicalFeatures): number[] {
+export function featureVectorFromStruct(f) {
   return FEATURE_METADATA.map((meta) => f[meta.key]);
 }
 
-export function formatFeatureValue(
-  value: number,
-  format: FeatureMetadata['format']
-): string {
+export function formatFeatureValue(value, format) {
   if (format === 'bool') return value >= 0.5 ? 'Yes (1)' : 'No (0)';
   if (format === 'ratio') return `${(value * 100).toFixed(1)}%`;
   if (format === 'float') return value.toFixed(2);

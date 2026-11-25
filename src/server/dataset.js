@@ -1,9 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import type { LabeledUrlSample } from '../core/mlEngine.ts';
-import { normalizeUrl } from '../core/normalizer.ts';
+import { normalizeUrl } from '../core/normalizer.js';
 
-const BUILT_IN_LEGITIMATE_URLS: string[] = [
+const BUILT_IN_LEGITIMATE_URLS = [
   'https://github.com/settings/security?tab=sessions',
   'https://github.com/openai/openai-node/issues?q=is%3Aopen',
   'https://docs.python.org/3/library/hashlib.html',
@@ -116,7 +115,7 @@ const BUILT_IN_LEGITIMATE_URLS: string[] = [
   'https://vercel.com/docs/deployments/overview',
 ];
 
-const BUILT_IN_PHISHING_URLS: string[] = [
+const BUILT_IN_PHISHING_URLS = [
   'http://login-secure-bank.xyz/update',
   'http://secure-paypal-login.verify-account-update.com/signin',
   'http://paypal-security-check.account-limit-resolve.net/webscr?cmd=_login-run',
@@ -230,8 +229,8 @@ const BUILT_IN_PHISHING_URLS: string[] = [
   'http://cloudflare-ddos-verification-check.complete-wallet-auth.com/verify',
 ];
 
-export function getBuiltInDataset(): LabeledUrlSample[] {
-  const samples: LabeledUrlSample[] = [];
+export function getBuiltInDataset() {
+  const samples = [];
   for (const raw of BUILT_IN_LEGITIMATE_URLS) {
     const norm = normalizeUrl(raw);
     if (norm.valid) {
@@ -247,8 +246,8 @@ export function getBuiltInDataset(): LabeledUrlSample[] {
   return samples;
 }
 
-function parseCsvLine(line: string): string[] {
-  const fields: string[] = [];
+function parseCsvLine(line) {
+  const fields = [];
   let current = '';
   let inQuotes = false;
 
@@ -272,7 +271,7 @@ function parseCsvLine(line: string): string[] {
   return fields;
 }
 
-function interpretLabel(rawLabel: string): 0 | 1 | null {
+function interpretLabel(rawLabel) {
   const v = rawLabel.trim().toLowerCase();
   if (!v) return null;
   if (
@@ -304,10 +303,7 @@ function interpretLabel(rawLabel: string): 0 | 1 | null {
   return null;
 }
 
-export function parseUrlDatasetCsv(
-  csvText: string,
-  maxRows = 5000
-): { samples: LabeledUrlSample[]; formatDetected: string; skippedRows: number } {
+export function parseUrlDatasetCsv(csvText, maxRows = 5000) {
   const lines = csvText
     .split(/\r?\n/)
     .map((l) => l.trim())
@@ -340,7 +336,7 @@ export function parseUrlDatasetCsv(
     formatDetected = 'Kaggle Phishing URL Dataset CSV';
   }
 
-  const samples: LabeledUrlSample[] = [];
+  const samples = [];
   let skippedRows = 0;
 
   for (let i = 1; i < lines.length && samples.length < maxRows; i++) {
@@ -351,10 +347,9 @@ export function parseUrlDatasetCsv(
       continue;
     }
 
-    let label: 0 | 1 | null = null;
+    let label = null;
     if (labelColIdx >= 0) {
       label = interpretLabel(cols[labelColIdx] ?? '');
-      // URLhaus threat column often contains "malware_download" etc.
       if (label === null && header[labelColIdx] === 'threat' && cols[labelColIdx]) {
         label = 1;
       }
@@ -393,10 +388,7 @@ export function parseUrlDatasetCsv(
   return { samples, formatDetected, skippedRows };
 }
 
-export function loadLocalDatasetIfExists(): {
-  samples: LabeledUrlSample[];
-  name: string;
-} {
+export function loadLocalDatasetIfExists() {
   const customCsvPath = path.resolve(process.cwd(), 'data/url-dataset.csv');
   if (fs.existsSync(customCsvPath)) {
     try {

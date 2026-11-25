@@ -1,5 +1,449 @@
 [
   {
+    "id": "d4841854-1e1f-42d6-b903-75cbc36a3c02",
+    "analyzedAt": "2026-11-25T02:50:34.930Z",
+    "rawUrl": "http://198.51.100.42/auth//microsoft-office365-secure-login/verify?session=94820194&redirect=http://evil.example",
+    "normalizedUrl": "http://198.51.100.42/auth/microsoft-office365-secure-login/verify?redirect=http%3A%2F%2Fevil.example&session=94820194",
+    "sha256": "bacd33e9f9e2e25c8d824dd9daa8bc631a14888b22f5bc72060bb1535a69636b",
+    "hashStatus": "MISS",
+    "verdict": "HIGH_RISK_ML",
+    "verdictLabel": "High Risk Phishing Site",
+    "riskScore": 0.9694,
+    "mnbProbability": 0.9354,
+    "logregProbability": 0.9973,
+    "result": {
+      "id": "d4841854-1e1f-42d6-b903-75cbc36a3c02",
+      "analyzedAt": "2026-11-25T02:50:34.930Z",
+      "module1": {
+        "normalization": {
+          "rawUrl": "http://198.51.100.42/auth//microsoft-office365-secure-login/verify?session=94820194&redirect=http://evil.example",
+          "normalizedUrl": "http://198.51.100.42/auth/microsoft-office365-secure-login/verify?redirect=http%3A%2F%2Fevil.example&session=94820194",
+          "scheme": "http",
+          "hostname": "198.51.100.42",
+          "port": "",
+          "pathname": "/auth/microsoft-office365-secure-login/verify",
+          "search": "?redirect=http%3A%2F%2Fevil.example&session=94820194",
+          "steps": [
+            {
+              "rule": "Trim Surrounding Whitespace",
+              "applied": false,
+              "detail": "No leading or trailing whitespace present."
+            },
+            {
+              "rule": "Strip Control & Zero-Width Characters",
+              "applied": false,
+              "detail": "No hidden control characters detected."
+            },
+            {
+              "rule": "Ensure Explicit URL Scheme",
+              "applied": false,
+              "detail": "Explicit scheme already present."
+            },
+            {
+              "rule": "Lowercase Scheme & Canonicalize Hostname (IDNA/Punycode)",
+              "applied": false,
+              "detail": "Canonical host resolved to \"198.51.100.42\" under \"http\"."
+            },
+            {
+              "rule": "Remove Default Ports (:80 / :443)",
+              "applied": false,
+              "detail": "No default port present."
+            },
+            {
+              "rule": "Normalize Path Formatting",
+              "applied": true,
+              "detail": "Standardized path \"/auth//microsoft-office365-secure-login/verify\" to \"/auth/microsoft-office365-secure-login/verify\"."
+            },
+            {
+              "rule": "Strip Client-Side Fragment (#)",
+              "applied": false,
+              "detail": "No URL fragment present."
+            },
+            {
+              "rule": "Canonicalize Query Parameter Ordering",
+              "applied": true,
+              "detail": "Sorted query string parameters lexicographically."
+            }
+          ],
+          "valid": true
+        },
+        "sha256": "bacd33e9f9e2e25c8d824dd9daa8bc631a14888b22f5bc72060bb1535a69636b",
+        "hashLookupStatus": "MISS",
+        "matchedThreat": null,
+        "safetyNote": "No exact SHA-256 match found in the local Known-Threat Database. A hash mismatch does not guarantee safety — passing normalized URL to Module 2 for ML & structural analysis."
+      },
+      "module2": {
+        "executed": true,
+        "ensembleProbability": 0.9694,
+        "mnbProbability": 0.9354,
+        "logregProbability": 0.9973,
+        "ensembleWeights": {
+          "mnb": 0.45,
+          "logreg": 0.55
+        },
+        "lexicalFeatures": {
+          "urlLength": 117,
+          "hostnameLength": 13,
+          "pathLength": 97,
+          "dotCount": 4,
+          "hyphenCount": 3,
+          "underscoreCount": 0,
+          "slashCount": 5,
+          "questionCount": 1,
+          "equalCount": 2,
+          "atSymbolPresent": 0,
+          "doubleSlashRedirect": 1,
+          "isHttps": 0,
+          "hasIpAddress": 1,
+          "digitRatio": 0.2051,
+          "specialCharCount": 7,
+          "subdomainDepth": 0,
+          "suspiciousKeywordCount": 6,
+          "shannonEntropy": 4.642
+        },
+        "featureContributions": [
+          {
+            "key": "urlLength",
+            "label": "Total URL Length",
+            "rawValue": 117,
+            "formattedValue": "117",
+            "standardizedValue": 3.82,
+            "weight": 0.804,
+            "contribution": 3.0715,
+            "direction": "phishing",
+            "triggerReason": "Unusually long URL (117 chars)"
+          },
+          {
+            "key": "pathLength",
+            "label": "Path & Query Length",
+            "rawValue": 97,
+            "formattedValue": "97",
+            "standardizedValue": 7.159,
+            "weight": -0.4113,
+            "contribution": -2.9444,
+            "direction": "legitimate"
+          },
+          {
+            "key": "hasIpAddress",
+            "label": "IP-Address Host",
+            "rawValue": 1,
+            "formattedValue": "Yes (1)",
+            "standardizedValue": 4.596,
+            "weight": 0.5146,
+            "contribution": 2.3653,
+            "direction": "phishing",
+            "triggerReason": "Uses raw IP address instead of registered domain"
+          },
+          {
+            "key": "suspiciousKeywordCount",
+            "label": "Suspicious Keyword Hits",
+            "rawValue": 6,
+            "formattedValue": "6",
+            "standardizedValue": 2.43,
+            "weight": 0.8243,
+            "contribution": 2.0027,
+            "direction": "phishing",
+            "triggerReason": "Contains 6 credential/urgency/brand keywords"
+          },
+          {
+            "key": "isHttps",
+            "label": "HTTPS Scheme Used",
+            "rawValue": 0,
+            "formattedValue": "No (0)",
+            "standardizedValue": -1.114,
+            "weight": -0.8985,
+            "contribution": 1.0007,
+            "direction": "phishing",
+            "triggerReason": "Served over unencrypted HTTP"
+          },
+          {
+            "key": "hostnameLength",
+            "label": "Hostname Length",
+            "rawValue": 13,
+            "formattedValue": "13",
+            "standardizedValue": -0.952,
+            "weight": 0.9265,
+            "contribution": -0.8821,
+            "direction": "legitimate"
+          },
+          {
+            "key": "shannonEntropy",
+            "label": "URL Shannon Entropy",
+            "rawValue": 4.642,
+            "formattedValue": "4.64",
+            "standardizedValue": 1.945,
+            "weight": 0.3852,
+            "contribution": 0.7493,
+            "direction": "phishing",
+            "triggerReason": "Elevated string entropy (4.64 bits/char)"
+          },
+          {
+            "key": "dotCount",
+            "label": "Dot (.) Count",
+            "rawValue": 4,
+            "formattedValue": "4",
+            "standardizedValue": 1.938,
+            "weight": 0.2841,
+            "contribution": 0.5507,
+            "direction": "phishing"
+          },
+          {
+            "key": "doubleSlashRedirect",
+            "label": "Embedded // Redirect",
+            "rawValue": 1,
+            "formattedValue": "Yes (1)",
+            "standardizedValue": 13.266,
+            "weight": 0.0293,
+            "contribution": 0.3886,
+            "direction": "phishing",
+            "triggerReason": "Contains embedded // redirect sequence in path/query"
+          },
+          {
+            "key": "slashCount",
+            "label": "Slash (/) Count",
+            "rawValue": 5,
+            "formattedValue": "5",
+            "standardizedValue": 1.439,
+            "weight": -0.2447,
+            "contribution": -0.352,
+            "direction": "legitimate"
+          },
+          {
+            "key": "equalCount",
+            "label": "Equals (=) Count",
+            "rawValue": 2,
+            "formattedValue": "2",
+            "standardizedValue": 5.255,
+            "weight": -0.0603,
+            "contribution": -0.3166,
+            "direction": "legitimate"
+          },
+          {
+            "key": "digitRatio",
+            "label": "Digit Character Ratio",
+            "rawValue": 0.2051,
+            "formattedValue": "20.5%",
+            "standardizedValue": 3.077,
+            "weight": 0.0881,
+            "contribution": 0.2711,
+            "direction": "phishing",
+            "triggerReason": "High numeric digit ratio (20.5%)"
+          },
+          {
+            "key": "hyphenCount",
+            "label": "Hyphen (-) Count",
+            "rawValue": 3,
+            "formattedValue": "3",
+            "standardizedValue": 0.284,
+            "weight": 0.8812,
+            "contribution": 0.2503,
+            "direction": "phishing",
+            "triggerReason": "High hyphen count (3) typical of lookalike domains"
+          },
+          {
+            "key": "specialCharCount",
+            "label": "Special Character Count",
+            "rawValue": 7,
+            "formattedValue": "7",
+            "standardizedValue": 7.471,
+            "weight": -0.0276,
+            "contribution": -0.2063,
+            "direction": "legitimate"
+          },
+          {
+            "key": "questionCount",
+            "label": "Question Mark (?) Count",
+            "rawValue": 1,
+            "formattedValue": "1",
+            "standardizedValue": 3.172,
+            "weight": -0.053,
+            "contribution": -0.168,
+            "direction": "legitimate"
+          },
+          {
+            "key": "underscoreCount",
+            "label": "Underscore (_) Count",
+            "rawValue": 0,
+            "formattedValue": "0",
+            "standardizedValue": -0.17,
+            "weight": -0.1521,
+            "contribution": 0.0259,
+            "direction": "neutral"
+          },
+          {
+            "key": "subdomainDepth",
+            "label": "Subdomain Depth",
+            "rawValue": 0,
+            "formattedValue": "0",
+            "standardizedValue": -1.307,
+            "weight": -0.0116,
+            "contribution": 0.0151,
+            "direction": "neutral"
+          },
+          {
+            "key": "atSymbolPresent",
+            "label": "@ Symbol Present",
+            "rawValue": 0,
+            "formattedValue": "No (0)",
+            "standardizedValue": -0.131,
+            "weight": 0.0944,
+            "contribution": -0.0124,
+            "direction": "neutral"
+          }
+        ],
+        "topTriggers": [
+          {
+            "key": "urlLength",
+            "label": "Total URL Length",
+            "rawValue": 117,
+            "formattedValue": "117",
+            "standardizedValue": 3.82,
+            "weight": 0.804,
+            "contribution": 3.0715,
+            "direction": "phishing",
+            "triggerReason": "Unusually long URL (117 chars)"
+          },
+          {
+            "key": "pathLength",
+            "label": "Path & Query Length",
+            "rawValue": 97,
+            "formattedValue": "97",
+            "standardizedValue": 7.159,
+            "weight": -0.4113,
+            "contribution": -2.9444,
+            "direction": "legitimate"
+          },
+          {
+            "key": "hasIpAddress",
+            "label": "IP-Address Host",
+            "rawValue": 1,
+            "formattedValue": "Yes (1)",
+            "standardizedValue": 4.596,
+            "weight": 0.5146,
+            "contribution": 2.3653,
+            "direction": "phishing",
+            "triggerReason": "Uses raw IP address instead of registered domain"
+          },
+          {
+            "key": "suspiciousKeywordCount",
+            "label": "Suspicious Keyword Hits",
+            "rawValue": 6,
+            "formattedValue": "6",
+            "standardizedValue": 2.43,
+            "weight": 0.8243,
+            "contribution": 2.0027,
+            "direction": "phishing",
+            "triggerReason": "Contains 6 credential/urgency/brand keywords"
+          },
+          {
+            "key": "isHttps",
+            "label": "HTTPS Scheme Used",
+            "rawValue": 0,
+            "formattedValue": "No (0)",
+            "standardizedValue": -1.114,
+            "weight": -0.8985,
+            "contribution": 1.0007,
+            "direction": "phishing",
+            "triggerReason": "Served over unencrypted HTTP"
+          },
+          {
+            "key": "hostnameLength",
+            "label": "Hostname Length",
+            "rawValue": 13,
+            "formattedValue": "13",
+            "standardizedValue": -0.952,
+            "weight": 0.9265,
+            "contribution": -0.8821,
+            "direction": "legitimate"
+          }
+        ],
+        "topNGrams": [
+          {
+            "token": "tok:auth",
+            "tfidfWeight": 0.0534,
+            "logOdds": 0.9102,
+            "impact": 0.0486,
+            "direction": "phishing"
+          },
+          {
+            "token": "tok:login",
+            "tfidfWeight": 0.0466,
+            "logOdds": 1.0026,
+            "impact": 0.0467,
+            "direction": "phishing"
+          },
+          {
+            "token": "c3:ogi",
+            "tfidfWeight": 0.0466,
+            "logOdds": 1.0026,
+            "impact": 0.0467,
+            "direction": "phishing"
+          },
+          {
+            "token": "c3:gin",
+            "tfidfWeight": 0.0466,
+            "logOdds": 1.0026,
+            "impact": 0.0467,
+            "direction": "phishing"
+          },
+          {
+            "token": "c4:logi",
+            "tfidfWeight": 0.0466,
+            "logOdds": 1.0026,
+            "impact": 0.0467,
+            "direction": "phishing"
+          },
+          {
+            "token": "c4:ogin",
+            "tfidfWeight": 0.0466,
+            "logOdds": 1.0026,
+            "impact": 0.0467,
+            "direction": "phishing"
+          },
+          {
+            "token": "c5:login",
+            "tfidfWeight": 0.0466,
+            "logOdds": 1.0026,
+            "impact": 0.0467,
+            "direction": "phishing"
+          },
+          {
+            "token": "c3:eri",
+            "tfidfWeight": 0.0466,
+            "logOdds": 0.9858,
+            "impact": 0.0459,
+            "direction": "phishing"
+          }
+        ],
+        "matchedKeywords": [
+          "login",
+          "verify",
+          "secure",
+          "microsoft",
+          "office365",
+          "auth"
+        ]
+      },
+      "module3": {
+        "verdict": "HIGH_RISK_ML",
+        "verdictLabel": "High Risk Phishing Site",
+        "riskScore": 0.9694,
+        "confidenceLabel": "High ML Risk Estimate (96.9%)",
+        "decisionBasis": "PROBABILISTIC_ML",
+        "summary": "No exact hash match found, but Module 2 classical ML ensemble scored 96.9% phishing probability (TF-IDF + MNB: 93.5%, Logistic Regression: 99.7%).",
+        "decisionSteps": [
+          "Module 1 normalized input to \"http://198.51.100.42/auth/microsoft-office365-secure-login/verify?redirect=http%3A%2F%2Fevil.example&session=94820194\".",
+          "Computed SHA-256 digest: bacd33e9f9e2e25c8d824dd9daa8bc631a14888b22f5bc72060bb1535a69636b.",
+          "Hash DB returned a MISS (note: absence from hash list does not prove safety).",
+          "TF-IDF + Multinomial Naive Bayes scored 93.5%.",
+          "Logistic Regression (18 lexical features) scored 99.7%.",
+          "Weighted ML ensemble (45% MNB + 55% LR) = 96.9% -> High Risk Phishing Site."
+        ],
+        "disclaimer": "Probabilistic Assessment Disclaimer: Cryptographic hash matching only detects exact known normalized URLs, and classical ML predictions are statistical estimates rather than absolute guarantees. Novel zero-day phishing URLs can evade both checks, while complex legitimate URLs (e.g., long OAuth or tracking links) can occasionally trigger false positives."
+      }
+    }
+  },
+  {
     "id": "1e621718-0c0d-4bda-9fdf-c6098fc6c573",
     "analyzedAt": "2026-11-23T07:07:34.864Z",
     "rawUrl": "http://login-secure-bank.xyz/update",

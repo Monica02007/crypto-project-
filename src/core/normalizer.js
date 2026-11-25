@@ -1,10 +1,8 @@
-import type { NormalizationResult, NormalizationStep } from './types.ts';
-
 const CONTROL_AND_ZERO_WIDTH_RE = /[\u0000-\u001F\u007F\u200B-\u200D\uFEFF]/g;
 const SCHEME_PREFIX_RE = /^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//;
 
-export function normalizeUrl(rawInput: string): NormalizationResult {
-  const steps: NormalizationStep[] = [];
+export function normalizeUrl(rawInput) {
+  const steps = [];
   const rawUrl = typeof rawInput === 'string' ? rawInput : '';
 
   const trimmed = rawUrl.trim();
@@ -56,7 +54,7 @@ export function normalizeUrl(rawInput: string): NormalizationResult {
       : 'Explicit scheme already present.',
   });
 
-  let parsed: URL;
+  let parsed;
   try {
     parsed = new URL(candidate);
   } catch {
@@ -125,7 +123,6 @@ export function normalizeUrl(rawInput: string): NormalizationResult {
   });
 
   const rawPathname = parsed.pathname || '/';
-  // Collapse repeated slashes in path only after scheme/host while recording if '//' existed in path
   let normalizedPathname = rawPathname.replace(/\/{2,}/g, '/');
   if (normalizedPathname.length > 1 && normalizedPathname.endsWith('/')) {
     normalizedPathname = normalizedPathname.slice(0, -1);

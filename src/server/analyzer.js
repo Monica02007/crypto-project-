@@ -1,19 +1,10 @@
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
-import { HybridMLEngine } from '../core/mlEngine.ts';
-import { normalizeUrl } from '../core/normalizer.ts';
-import type {
-  AnalysisResult,
-  ModelComparisonReport,
-  Module1Report,
-  Module2Report,
-  Module3Report,
-  ScanHistoryEntry,
-  VerdictLevel,
-} from '../core/types.ts';
-import { loadLocalDatasetIfExists, parseUrlDatasetCsv } from './dataset.ts';
-import { ThreatHashStore, computeSha256Hex } from './threatStore.ts';
+import { HybridMLEngine } from '../core/mlEngine.js';
+import { normalizeUrl } from '../core/normalizer.js';
+import { loadLocalDatasetIfExists, parseUrlDatasetCsv } from './dataset.js';
+import { ThreatHashStore, computeSha256Hex } from './threatStore.js';
 
 const DATA_DIR = path.resolve(process.cwd(), 'data');
 const HISTORY_PATH = path.join(DATA_DIR, 'scan-history.json');
@@ -22,10 +13,6 @@ const DISCLAIMER_TEXT =
   'Probabilistic Assessment Disclaimer: Cryptographic hash matching only detects exact known normalized URLs, and classical ML predictions are statistical estimates rather than absolute guarantees. Novel zero-day phishing URLs can evade both checks, while complex legitimate URLs (e.g., long OAuth or tracking links) can occasionally trigger false positives.';
 
 export class PhishingDetectionService {
-  threatStore: ThreatHashStore;
-  mlEngine: HybridMLEngine;
-  private history: ScanHistoryEntry[];
-
   constructor() {
     this.threatStore = new ThreatHashStore();
     const initial = loadLocalDatasetIfExists();
@@ -33,13 +20,13 @@ export class PhishingDetectionService {
     this.history = this.loadHistory();
   }
 
-  private ensureDataDir(): void {
+  ensureDataDir() {
     if (!fs.existsSync(DATA_DIR)) {
       fs.mkdirSync(DATA_DIR, { recursive: true });
     }
   }
 
-  private loadHistory(): ScanHistoryEntry[] {
+  loadHistory() {
     if (!fs.existsSync(HISTORY_PATH)) return [];
     try {
       const parsed = JSON.parse(fs.readFileSync(HISTORY_PATH, 'utf-8'));
@@ -49,7 +36,7 @@ export class PhishingDetectionService {
     }
   }
 
-  private saveHistory(): void {
+  saveHistory() {
     this.ensureDataDir();
     fs.writeFileSync(
       HISTORY_PATH,
@@ -58,39 +45,33 @@ export class PhishingDetectionService {
     );
   }
 
-  getModelReport(): ModelComparisonReport {
+  getModelReport() {
     return this.mlEngine.report;
   }
 
-  evaluateCsvDataset(
-    csvText: string,
-    datasetName?: string
-  ): ModelComparisonReport {
+  evaluateCsvDataset(csvText, datasetName) {
     const parsed = parseUrlDatasetCsv(csvText);
     const title = datasetName?.trim() || parsed.formatDetected;
     this.mlEngine = new HybridMLEngine(parsed.samples, title, 'uploaded-csv');
     return this.mlEngine.report;
   }
 
-  revertToBuiltInDataset(): ModelComparisonReport {
+  revertToBuiltInDataset() {
     const initial = loadLocalDatasetIfExists();
     this.mlEngine = new HybridMLEngine(initial.samples, initial.name, 'built-in');
     return this.mlEngine.report;
   }
 
-  getHistory(): ScanHistoryEntry[] {
+  getHistory() {
     return this.history;
   }
 
-  clearHistory(): void {
+  clearHistory() {
     this.history = [];
     this.saveHistory();
   }
 
-  analyzeUrl(
-    rawUrl: string,
-    options?: { forceMlInspection?: boolean }
-  ): AnalysisResult {
+  analyzeUrl(rawUrl) {
     const normalization = normalizeUrl(rawUrl);
     if (!normalization.valid) {
       throw new Error(normalization.error ?? 'Invalid URL input.');
@@ -99,7 +80,7 @@ export class PhishingDetectionService {
     const sha256 = computeSha256Hex(normalization.normalizedUrl);
     const matchedThreat = this.threatStore.lookup(sha256);
 
-    const module1: Module1Report = {
+    const module1 = {
       normalization,
       sha256,
       hashLookupStatus: matchedThreat ? 'MATCH' : 'MISS',
@@ -111,7 +92,7 @@ export class PhishingDetectionService {
 
     const mlPrediction = this.mlEngine.predict(normalization.normalizedUrl);
 
-    const module2: Module2Report = {
+    const module2 = {
       executed: true,
       skippedReason: matchedThreat
         ? 'Module 1 matched an exact known-threat SHA-256 hash; Module 2 diagnostic ML analysis is shown alongside for verification.'
@@ -127,7 +108,7 @@ export class PhishingDetectionService {
       matchedKeywords: mlPrediction.matchedKeywords,
     };
 
-    let module3: Module3Report;
+    let module3;
 
     if (matchedThreat) {
       module3 = {
@@ -147,10 +128,10 @@ export class PhishingDetectionService {
       };
     } else {
       const score = mlPrediction.ensembleProbability;
-      let verdict: VerdictLevel;
-      let verdictLabel: string;
-      let confidenceLabel: string;
-      let summary: string;
+      let verdict;
+      let verdictLabel;
+      let confidenceLabel;
+      let summary;
 
       if (score >= 0.72) {
         verdict = 'HIGH_RISK_ML';
@@ -169,7 +150,7 @@ export class PhishingDetectionService {
         summary = `No exact hash match found, and Module 2 scored ${(score * 100).toFixed(1)}% phishing probability across both TF-IDF character n-grams and structural lexical features.`;
       }
 
-      const decisionSteps: string[] = [
+      const decisionSteps = [
         `Module 1 normalized input to "${normalization.normalizedUrl}".`,
         `Computed SHA-256 digest: ${sha256}.`,
         'Hash DB returned a MISS (note: absence from hash list does not prove safety).',
@@ -190,7 +171,7 @@ export class PhishingDetectionService {
       };
     }
 
-    const result: AnalysisResult = {
+    const result = {
       id: crypto.randomUUID(),
       analyzedAt: new Date().toISOString(),
       module1,
@@ -198,7 +179,7 @@ export class PhishingDetectionService {
       module3,
     };
 
-    const historyEntry: ScanHistoryEntry = {
+    const historyEntry = {
       id: result.id,
       analyzedAt: result.analyzedAt,
       rawUrl: normalization.rawUrl,

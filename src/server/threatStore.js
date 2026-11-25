@@ -1,17 +1,9 @@
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
-import { normalizeUrl } from '../core/normalizer.ts';
-import type { ThreatHashRecord } from '../core/types.ts';
+import { normalizeUrl } from '../core/normalizer.js';
 
-interface SeedThreatSpec {
-  url: string;
-  source: string;
-  category: string;
-  targetBrand: string;
-}
-
-const STARTER_THREAT_SEEDS: SeedThreatSpec[] = [
+const STARTER_THREAT_SEEDS = [
   {
     url: 'http://login-secure-bank.xyz/update',
     source: 'PhishTank Seed',
@@ -131,13 +123,13 @@ const STARTER_THREAT_SEEDS: SeedThreatSpec[] = [
 const DATA_DIR = path.resolve(process.cwd(), 'data');
 const THREAT_DB_PATH = path.join(DATA_DIR, 'threat-hashes.json');
 
-export function computeSha256Hex(input: string): string {
+export function computeSha256Hex(input) {
   return crypto.createHash('sha256').update(input, 'utf8').digest('hex');
 }
 
-function buildSeededRecords(): ThreatHashRecord[] {
+function buildSeededRecords() {
   const baseDate = '2026-11-15T10:00:00.000Z';
-  const records: ThreatHashRecord[] = [];
+  const records = [];
   for (const seed of STARTER_THREAT_SEEDS) {
     const norm = normalizeUrl(seed.url);
     if (!norm.valid) continue;
@@ -155,30 +147,28 @@ function buildSeededRecords(): ThreatHashRecord[] {
 }
 
 export class ThreatHashStore {
-  private records: Map<string, ThreatHashRecord>;
-
   constructor() {
     this.records = new Map();
     this.loadOrInitialize();
   }
 
-  private ensureDataDir(): void {
+  ensureDataDir() {
     if (!fs.existsSync(DATA_DIR)) {
       fs.mkdirSync(DATA_DIR, { recursive: true });
     }
   }
 
-  private persist(): void {
+  persist() {
     this.ensureDataDir();
     const list = Array.from(this.records.values());
     fs.writeFileSync(THREAT_DB_PATH, JSON.stringify(list, null, 2), 'utf-8');
   }
 
-  private loadOrInitialize(): void {
+  loadOrInitialize() {
     if (fs.existsSync(THREAT_DB_PATH)) {
       try {
         const raw = fs.readFileSync(THREAT_DB_PATH, 'utf-8');
-        const parsed = JSON.parse(raw) as ThreatHashRecord[];
+        const parsed = JSON.parse(raw);
         if (Array.isArray(parsed) && parsed.length > 0) {
           for (const rec of parsed) {
             if (rec && typeof rec.sha256 === 'string') {
@@ -194,7 +184,7 @@ export class ThreatHashStore {
     this.resetToStarterSeed();
   }
 
-  resetToStarterSeed(): ThreatHashRecord[] {
+  resetToStarterSeed() {
     this.records.clear();
     for (const rec of buildSeededRecords()) {
       this.records.set(rec.sha256, rec);
@@ -203,28 +193,23 @@ export class ThreatHashStore {
     return this.getAll();
   }
 
-  lookup(sha256Hex: string): ThreatHashRecord | null {
+  lookup(sha256Hex) {
     return this.records.get(sha256Hex.toLowerCase()) ?? null;
   }
 
-  getAll(): ThreatHashRecord[] {
+  getAll() {
     return Array.from(this.records.values()).sort((a, b) =>
       b.addedAt.localeCompare(a.addedAt)
     );
   }
 
-  addByUrl(params: {
-    url: string;
-    source?: string;
-    category?: string;
-    targetBrand?: string;
-  }): ThreatHashRecord {
+  addByUrl(params) {
     const norm = normalizeUrl(params.url);
     if (!norm.valid) {
       throw new Error(norm.error ?? 'Invalid URL provided.');
     }
     const sha256 = computeSha256Hex(norm.normalizedUrl);
-    const record: ThreatHashRecord = {
+    const record = {
       sha256,
       normalizedUrl: norm.normalizedUrl,
       source: params.source?.trim() || 'Custom Demo Entry',
@@ -238,18 +223,12 @@ export class ThreatHashStore {
     return record;
   }
 
-  addByHash(params: {
-    sha256: string;
-    labelUrl?: string;
-    source?: string;
-    category?: string;
-    targetBrand?: string;
-  }): ThreatHashRecord {
+  addByHash(params) {
     const cleanHash = params.sha256.trim().toLowerCase();
     if (!/^[a-f0-9]{64}$/.test(cleanHash)) {
       throw new Error('SHA-256 hash must be exactly 64 hexadecimal characters.');
     }
-    const record: ThreatHashRecord = {
+    const record = {
       sha256: cleanHash,
       normalizedUrl: params.labelUrl?.trim() || '(Raw SHA-256 Digest Entry)',
       source: params.source?.trim() || 'Manual SHA-256 Entry',
@@ -263,7 +242,7 @@ export class ThreatHashStore {
     return record;
   }
 
-  remove(sha256: string): boolean {
+  remove(sha256) {
     const deleted = this.records.delete(sha256.trim().toLowerCase());
     if (deleted) {
       this.persist();

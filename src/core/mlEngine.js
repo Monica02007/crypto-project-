@@ -3,74 +3,26 @@ import {
   extractLexicalFeatures,
   featureVectorFromStruct,
   formatFeatureValue,
-} from './features.ts';
-import type {
-  ConfusionMatrix,
-  DatasetSummary,
-  FeatureContribution,
-  GlobalFeatureWeight,
-  GlobalNGramIndicator,
-  LexicalFeatures,
-  ModelComparisonReport,
-  ModelMetrics,
-  NGramContribution,
-} from './types.ts';
-
-export interface LabeledUrlSample {
-  url: string;
-  label: 0 | 1; // 1 = phishing, 0 = legitimate
-}
-
-interface TrainedNaiveBayes {
-  vocab: string[];
-  vocabIndex: Map<string, number>;
-  idf: number[];
-  logPriorPhish: number;
-  logPriorLegit: number;
-  logLikelihoodPhish: number[];
-  logLikelihoodLegit: number[];
-  phishDocFreq: number[];
-  legitDocFreq: number[];
-}
-
-interface TrainedLogisticRegression {
-  means: number[];
-  stds: number[];
-  weights: number[];
-  bias: number;
-}
-
-export interface MLRuntimePrediction {
-  ensembleProbability: number;
-  mnbProbability: number;
-  logregProbability: number;
-  lexicalFeatures: LexicalFeatures;
-  matchedKeywords: string[];
-  featureContributions: FeatureContribution[];
-  topTriggers: FeatureContribution[];
-  topNGrams: NGramContribution[];
-}
+} from './features.js';
 
 const ENSEMBLE_WEIGHT_MNB = 0.45;
 const ENSEMBLE_WEIGHT_LR = 0.55;
 
-function sigmoid(z: number): number {
+function sigmoid(z) {
   if (z > 35) return 1 - 1e-15;
   if (z < -35) return 1e-15;
   return 1 / (1 + Math.exp(-z));
 }
 
-export function tokenizeUrlForNGrams(url: string): string[] {
+export function tokenizeUrlForNGrams(url) {
   const lower = url.toLowerCase().replace(/^https?:\/\//, '');
-  const tokens: string[] = [];
+  const tokens = [];
 
-  // Delimited lexical tokens (e.g., host labels, path segments, query words)
   const wordTokens = lower.split(/[^a-z0-9]+/).filter((w) => w.length >= 2);
   for (const w of wordTokens) {
     tokens.push(`tok:${w}`);
   }
 
-  // Character 3-grams, 4-grams, 5-grams across URL structure
   const bounded = `^${lower.slice(0, 140)}$`;
   for (const n of [3, 4, 5]) {
     for (let i = 0; i <= bounded.length - n; i++) {
@@ -81,7 +33,7 @@ export function tokenizeUrlForNGrams(url: string): string[] {
   return tokens;
 }
 
-function deterministicShuffle<T>(items: T[], seed = 20261122): T[] {
+function deterministicShuffle(items, seed = 20261122) {
   const arr = [...items];
   let s = seed >>> 0;
   for (let i = arr.length - 1; i > 0; i--) {
@@ -94,10 +46,7 @@ function deterministicShuffle<T>(items: T[], seed = 20261122): T[] {
   return arr;
 }
 
-function stratifiedSplit(
-  samples: LabeledUrlSample[],
-  testRatio = 0.2
-): { train: LabeledUrlSample[]; test: LabeledUrlSample[] } {
+function stratifiedSplit(samples, testRatio = 0.2) {
   const phish = deterministicShuffle(
     samples.filter((s) => s.label === 1),
     104729
@@ -122,8 +71,8 @@ function stratifiedSplit(
   return { train, test };
 }
 
-function trainMultinomialNB(train: LabeledUrlSample[]): TrainedNaiveBayes {
-  const docFreq = new Map<string, number>();
+function trainMultinomialNB(train) {
+  const docFreq = new Map();
   const tokenizedDocs = train.map((sample) => {
     const tokens = tokenizeUrlForNGrams(sample.url);
     const unique = new Set(tokens);
@@ -141,7 +90,7 @@ function trainMultinomialNB(train: LabeledUrlSample[]): TrainedNaiveBayes {
     .slice(0, maxVocab);
 
   const vocab = vocabEntries.map(([tok]) => tok);
-  const vocabIndex = new Map<string, number>();
+  const vocabIndex = new Map();
   vocab.forEach((tok, idx) => vocabIndex.set(tok, idx));
 
   const nDocs = train.length;
@@ -150,10 +99,10 @@ function trainMultinomialNB(train: LabeledUrlSample[]): TrainedNaiveBayes {
   );
 
   const vSize = vocab.length;
-  const phishTfIdfSum = new Array<number>(vSize).fill(0);
-  const legitTfIdfSum = new Array<number>(vSize).fill(0);
-  const phishDocFreq = new Array<number>(vSize).fill(0);
-  const legitDocFreq = new Array<number>(vSize).fill(0);
+  const phishTfIdfSum = new Array(vSize).fill(0);
+  const legitTfIdfSum = new Array(vSize).fill(0);
+  const phishDocFreq = new Array(vSize).fill(0);
+  const legitDocFreq = new Array(vSize).fill(0);
 
   let phishDocs = 0;
   let legitDocs = 0;
@@ -162,7 +111,7 @@ function trainMultinomialNB(train: LabeledUrlSample[]): TrainedNaiveBayes {
     if (doc.label === 1) phishDocs++;
     else legitDocs++;
 
-    const counts = new Map<number, number>();
+    const counts = new Map();
     for (const tok of doc.tokens) {
       const idx = vocabIndex.get(tok);
       if (idx !== undefined) {
@@ -170,9 +119,8 @@ function trainMultinomialNB(train: LabeledUrlSample[]): TrainedNaiveBayes {
       }
     }
 
-    // L2-normalized TF-IDF vector per URL document
     let normSq = 0;
-    const weighted = new Map<number, number>();
+    const weighted = new Map();
     for (const [idx, count] of counts.entries()) {
       const tf = 1 + Math.log(count);
       const val = tf * idf[idx];
@@ -219,12 +167,9 @@ function trainMultinomialNB(train: LabeledUrlSample[]): TrainedNaiveBayes {
   };
 }
 
-function predictMultinomialNB(
-  model: TrainedNaiveBayes,
-  url: string
-): { probability: number; topNGrams: NGramContribution[] } {
+function predictMultinomialNB(model, url) {
   const tokens = tokenizeUrlForNGrams(url);
-  const counts = new Map<number, number>();
+  const counts = new Map();
   for (const tok of tokens) {
     const idx = model.vocabIndex.get(tok);
     if (idx !== undefined) {
@@ -233,7 +178,7 @@ function predictMultinomialNB(
   }
 
   let normSq = 0;
-  const weighted = new Map<number, number>();
+  const weighted = new Map();
   for (const [idx, count] of counts.entries()) {
     const val = (1 + Math.log(count)) * model.idf[idx];
     weighted.set(idx, val);
@@ -243,7 +188,7 @@ function predictMultinomialNB(
 
   let logScorePhish = model.logPriorPhish;
   let logScoreLegit = model.logPriorLegit;
-  const contributions: NGramContribution[] = [];
+  const contributions = [];
 
   for (const [idx, val] of weighted.entries()) {
     const tfidfWeight = val / norm;
@@ -263,7 +208,6 @@ function predictMultinomialNB(
     });
   }
 
-  // Softmax over 2 classes with temperature scaling for well-calibrated probabilities
   const maxLog = Math.max(logScorePhish, logScoreLegit);
   const expPhish = Math.exp(logScorePhish - maxLog);
   const expLegit = Math.exp(logScoreLegit - maxLog);
@@ -276,9 +220,7 @@ function predictMultinomialNB(
   return { probability, topNGrams };
 }
 
-function trainLogisticRegression(
-  train: LabeledUrlSample[]
-): TrainedLogisticRegression {
+function trainLogisticRegression(train) {
   const vectors = train.map((sample) => {
     const { features } = extractLexicalFeatures(sample.url);
     return featureVectorFromStruct(features);
@@ -287,8 +229,8 @@ function trainLogisticRegression(
   const n = vectors.length;
   const d = FEATURE_METADATA.length;
 
-  const means = new Array<number>(d).fill(0);
-  const stds = new Array<number>(d).fill(1);
+  const means = new Array(d).fill(0);
+  const stds = new Array(d).fill(1);
 
   for (let j = 0; j < d; j++) {
     let sum = 0;
@@ -307,14 +249,14 @@ function trainLogisticRegression(
     vec.map((v, j) => (v - means[j]) / stds[j])
   );
 
-  const weights = new Array<number>(d).fill(0);
+  const weights = new Array(d).fill(0);
   let bias = 0;
   const learningRate = 0.18;
   const l2Lambda = 0.015;
   const epochs = 700;
 
   for (let epoch = 0; epoch < epochs; epoch++) {
-    const gradW = new Array<number>(d).fill(0);
+    const gradW = new Array(d).fill(0);
     let gradB = 0;
 
     for (let i = 0; i < n; i++) {
@@ -340,11 +282,7 @@ function trainLogisticRegression(
   return { means, stds, weights, bias };
 }
 
-function describeTriggerReason(
-  key: keyof LexicalFeatures,
-  rawVal: number,
-  direction: 'phishing' | 'legitimate' | 'neutral'
-): string | undefined {
+function describeTriggerReason(key, rawVal, direction) {
   if (direction === 'neutral') return undefined;
   switch (key) {
     case 'hasIpAddress':
@@ -372,20 +310,12 @@ function describeTriggerReason(
   }
 }
 
-function predictLogisticRegression(
-  model: TrainedLogisticRegression,
-  url: string
-): {
-  probability: number;
-  lexicalFeatures: LexicalFeatures;
-  matchedKeywords: string[];
-  contributions: FeatureContribution[];
-} {
+function predictLogisticRegression(model, url) {
   const { features, matchedKeywords } = extractLexicalFeatures(url);
   const rawVec = featureVectorFromStruct(features);
 
   let z = model.bias;
-  const contributions: FeatureContribution[] = [];
+  const contributions = [];
 
   for (let j = 0; j < FEATURE_METADATA.length; j++) {
     const meta = FEATURE_METADATA[j];
@@ -393,7 +323,7 @@ function predictLogisticRegression(
     const contrib = model.weights[j] * zVal;
     z += contrib;
 
-    const direction: FeatureContribution['direction'] =
+    const direction =
       Math.abs(contrib) < 0.04
         ? 'neutral'
         : contrib > 0
@@ -421,20 +351,14 @@ function predictLogisticRegression(
   };
 }
 
-function computeMetrics(
-  modelName: string,
-  modelKey: ModelMetrics['modelKey'],
-  predictions: { actual: 0 | 1; prob: number }[],
-  trainSamples: number,
-  threshold = 0.5
-): ModelMetrics {
+function computeMetrics(modelName, modelKey, predictions, trainSamples, threshold = 0.5) {
   let tp = 0;
   let fp = 0;
   let tn = 0;
   let fn = 0;
 
   for (const row of predictions) {
-    const pred: 0 | 1 = row.prob >= threshold ? 1 : 0;
+    const pred = row.prob >= threshold ? 1 : 0;
     if (row.actual === 1 && pred === 1) tp++;
     else if (row.actual === 0 && pred === 1) fp++;
     else if (row.actual === 0 && pred === 0) tn++;
@@ -449,8 +373,6 @@ function computeMetrics(
     precision + recall > 0 ? (2 * precision * recall) / (precision + recall) : 0;
   const falsePositiveRate = fp + tn > 0 ? fp / (fp + tn) : 0;
 
-  const cm: ConfusionMatrix = { tp, fp, tn, fn };
-
   return {
     modelName,
     modelKey,
@@ -459,25 +381,14 @@ function computeMetrics(
     recall: Number(recall.toFixed(4)),
     f1Score: Number(f1Score.toFixed(4)),
     falsePositiveRate: Number(falsePositiveRate.toFixed(4)),
-    confusionMatrix: cm,
+    confusionMatrix: { tp, fp, tn, fn },
     trainSamples,
     testSamples: predictions.length,
   };
 }
 
 export class HybridMLEngine {
-  datasetName: string;
-  sourceType: DatasetSummary['sourceType'];
-  trainedAt: string;
-  mnb: TrainedNaiveBayes;
-  logreg: TrainedLogisticRegression;
-  report: ModelComparisonReport;
-
-  constructor(
-    samples: LabeledUrlSample[],
-    datasetName: string,
-    sourceType: DatasetSummary['sourceType']
-  ) {
+  constructor(samples, datasetName, sourceType) {
     this.datasetName = datasetName;
     this.sourceType = sourceType;
     this.trainedAt = new Date().toISOString();
@@ -486,9 +397,9 @@ export class HybridMLEngine {
     this.mnb = trainMultinomialNB(train);
     this.logreg = trainLogisticRegression(train);
 
-    const mnbEval: { actual: 0 | 1; prob: number }[] = [];
-    const lrEval: { actual: 0 | 1; prob: number }[] = [];
-    const ensEval: { actual: 0 | 1; prob: number }[] = [];
+    const mnbEval = [];
+    const lrEval = [];
+    const ensEval = [];
 
     for (const sample of test) {
       const mnbRes = predictMultinomialNB(this.mnb, sample.url);
@@ -505,21 +416,17 @@ export class HybridMLEngine {
     const phishingCount = samples.filter((s) => s.label === 1).length;
     const legitimateCount = samples.length - phishingCount;
 
-    const globalFeatureWeights: GlobalFeatureWeight[] = FEATURE_METADATA.map(
-      (meta, idx) => {
-        const w = this.logreg.weights[idx];
-        const direction: 'phishing' | 'legitimate' =
-          w >= 0 ? 'phishing' : 'legitimate';
-        return {
-          key: meta.key,
-          label: meta.label,
-          weight: Number(w.toFixed(4)),
-          direction,
-        };
-      }
-    ).sort((a, b) => Math.abs(b.weight) - Math.abs(a.weight));
+    const globalFeatureWeights = FEATURE_METADATA.map((meta, idx) => {
+      const w = this.logreg.weights[idx];
+      return {
+        key: meta.key,
+        label: meta.label,
+        weight: Number(w.toFixed(4)),
+        direction: w >= 0 ? 'phishing' : 'legitimate',
+      };
+    }).sort((a, b) => Math.abs(b.weight) - Math.abs(a.weight));
 
-    const ngramIndicators: GlobalNGramIndicator[] = this.mnb.vocab
+    const ngramIndicators = this.mnb.vocab
       .map((token, idx) => ({
         token,
         logOdds: Number(
@@ -583,7 +490,7 @@ export class HybridMLEngine {
     };
   }
 
-  predict(normalizedUrl: string): MLRuntimePrediction {
+  predict(normalizedUrl) {
     const mnbRes = predictMultinomialNB(this.mnb, normalizedUrl);
     const lrRes = predictLogisticRegression(this.logreg, normalizedUrl);
 

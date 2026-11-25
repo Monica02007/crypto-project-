@@ -1,9 +1,9 @@
 import express from 'express';
 import path from 'node:path';
 import { createServer as createViteServer } from 'vite';
-import { PhishingDetectionService } from './src/server/analyzer.ts';
+import { PhishingDetectionService } from './src/server/analyzer.js';
 
-async function startServer(): Promise<void> {
+async function startServer() {
   const app = express();
   const port = Number(process.env.PORT ?? 3000);
   const service = new PhishingDetectionService();
@@ -16,14 +16,12 @@ async function startServer(): Promise<void> {
 
   app.post('/api/analyze', (req, res) => {
     try {
-      const { url, forceMlInspection } = req.body ?? {};
+      const { url } = req.body ?? {};
       if (typeof url !== 'string' || !url.trim()) {
         res.status(400).json({ error: 'Please enter a valid URL to analyze.' });
         return;
       }
-      const result = service.analyzeUrl(url, {
-        forceMlInspection: Boolean(forceMlInspection),
-      });
+      const result = service.analyzeUrl(url);
       res.json(result);
     } catch (err) {
       const message =
